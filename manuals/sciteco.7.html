@@ -1,0 +1,3191 @@
+<!-- Creator     : groff version 1.21 -->
+<!-- CreationDate: Sat Mar 16 18:56:42 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>sciteco</title>
+
+</head>
+<body>
+
+<h1 align="center">sciteco</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#INTRODUCTION">INTRODUCTION</a><br>
+<a href="#KEY TRANSLATION">KEY TRANSLATION</a><br>
+<a href="#COMMANDLINE EDITING">COMMANDLINE EDITING</a><br>
+<a href="#ARITHMETICS AND EXPRESSIONS">ARITHMETICS AND EXPRESSIONS</a><br>
+<a href="#BUFFER RING">BUFFER RING</a><br>
+<a href="#COMMAND SYNTAX">COMMAND SYNTAX</a><br>
+<a href="#Q-REGISTERS">Q-REGISTERS</a><br>
+<a href="#STRING-BUILDING CHARACTERS">STRING-BUILDING CHARACTERS</a><br>
+<a href="#PATTERN MATCH CHARACTERS">PATTERN MATCH CHARACTERS</a><br>
+<a href="#FLOW CONTROL">FLOW CONTROL</a><br>
+<a href="#COMMAND REFERENCE">COMMAND REFERENCE</a><br>
+<a href="#COMPATIBILITY">COMPATIBILITY</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">sciteco
+&minus;&minus; Language reference for the <b>SciTECO</b>
+text editor and language</p>
+
+<h2>INTRODUCTION
+<a name="INTRODUCTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is a powerful editor and interactive programming language
+following an unique paradigm of text editing. It is both
+different from popular screen editors like <i>ex</i> and
+traditional command-based editors like <i>ed</i>. Both of
+these paradigms can be understood as language-based. Screen
+editors use simple languages based on commands that closely
+correspond with key presses (keyboard commands) while
+command-based editors use more complex, often
+turing-complete languages. Screen editors interpret their
+language immediately while command-based editors do so only
+after complete input of an expression. Some editors like
+<i>Vi</i> or <i>emacs</i> support both screen-editing and
+command-lines in different modes of operation. While such
+editors represent a compromise between both paradigms (they
+support both paradigms to some extent), <b>SciTECO</b>
+represents a <b>synthesis</b>. In <b>SciTECO</b> the
+screen-editing and command languages are the same! The
+<b>SciTECO</b> language can be interpreted interactively and
+commands can be as simple as single key presses or as
+complex as nested high-level structured programming
+constructs. While screen-editors often support an undo-stack
+to undo simple operations, <b>SciTECO</b> supports undoing
+on a per-character, per-command or user-configurable level
+undoing most of the side-effects on the overall editor
+state.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is a member of the TECO family of text editor languages,
+invented by Dan Murphy in the 1960s. TECO was initially a
+purely command-driven editor that evolved screen editing
+features later on, culminating in the invention of Emacs as
+a TECO customization (macro package) in the 1970s. Emacs
+later became an independent program that eventually dropped
+TECO as its scripting language in favour of Lisp.
+<b>SciTECO</b> is not the first attempt to devise a
+TECO-based interactive screen editor. It is very similar to
+<i>Video TECO</i>, a little known editor that pioneered the
+concept. When <i>Video TECO</i> wanted to &ldquo;outdo
+classic TECOs in every way&rdquo;, <b>SciTECO</b> wants to
+outdo <i>Video TECO</i> in every way.</p>
+
+<p style="margin-left:11%; margin-top: 1em">When using
+<b>SciTECO</b> in interactive mode, it is important to know
+exactly how <b>SciTECO</b> translates and processes user
+input. Generally speaking, the user inputs TECO code that is
+parsed and executed on the fly by a stream parser/executor
+with the possibility to rub out code from the end of the
+input stream, reversing its side-effects. The input stream
+is called command line macro. The language of the
+command-line macro is basically the same as the language
+used in batch processing, with the exception of some
+commands that depend on the command line macro or
+undo-capabilities that are disabled in batch mode. To add to
+or remove from the command line macro, <b>SciTECO</b>
+supports a number of special keys called immediate editing
+commands. The key-processing for immediate editing commands
+is described in the next two sections. While immediate
+editing commands can be understood as yet another - albeit
+limited - language for screen editing, <b>SciTECO</b> also
+supports regular commands for command-line editing.</p>
+
+<h2>KEY TRANSLATION
+<a name="KEY TRANSLATION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">When the user
+presses a key or key-combination it is first translated to
+an ASCII character. All immediate editing commands and
+regular <b>SciTECO</b> commands operate on a language based
+solely on <b>ASCII</b> characters. The rules for translating
+keys are as follows:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>1.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>Keys with a printable representation (letters, digits
+and special characters) are translated to their printable
+representation. Shift-combinations automatically result in
+upper-case letters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>2.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>Control-combinations (e.g. CTRL+A) are translated to
+control codes, that is a code smaller than 32. The control
+code can be calculated by stripping the seventh bit from the
+upper-case letter&rsquo;s ASCII code. So for instance, the
+upper or lower case A (65) will be translated to code 1, B
+to code 2, ecetera. <b>SciTECO</b> echos control codes as
+Caret followed by the corresponding upper case letter, so
+you seldomly need to know a control codes actual numeric
+code. For instance, control code 2 - typed CTRL+B - will be
+echoed &ldquo;^B&rdquo;. <b>SciTECO</b> also treats
+Caret-letter combinations equivalent to control codes under
+most circumstances.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>3.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>A few keys with non-printable representation are
+translated to control codes as well. The most prominent is
+the Escape key - it is translated to code 27. The Backspace
+key will be translated to code 8, and the Tab key to code 9.
+Last but not least, the Return key is translated to the
+current buffer&rsquo;s end of line sequence (linefeed,
+carriage return followed by linefeed or just carriage
+return).</p> </td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>4.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>A selection of other keys without printable
+representation (called function keys) are translated to
+user-definable character sequences. This feature is called
+function key macros and explained in the next
+subsection.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Function Key
+Macros</b> <br>
+By default function keys except Escape, Backspace and Return
+are ignored by <b>SciTECO</b>. By setting bit 6 of the
+<b>ED</b> flag variable, function key handling is
+enabled:</p>
+<pre style="margin-left:11%;">0,64ED</pre>
+
+<p style="margin-left:11%;">This is usually performed in
+the editor profile. With certain interfaces (curses) after
+enabling function keys, the Escape key might only be handled
+after a short delay. This is because it might be used by the
+terminal to transmit Escape Sequences.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Enabling
+function keys also enables Function Key Macros. These are
+Q-Register strings inserted into the command stream (before
+immediate editing command handling) when certain function
+keys (or combinations) are pressed. The following list of
+Function Key Macro registers are supported:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p style="margin-top: 1em"><b>^FDOWN</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FUP</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the down/up cursor keys are pressed.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FLEFT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSLEFT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the left or shift-left cursor keys are
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FRIGHT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSRIGHT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the right or shift-right cursor keys are
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FHOME</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSHOME</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Home or shift-Home keys are
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FF</b><i>x</i></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Fx-key is pressed (<i>x</i> is a
+number between 0 and 63).</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FDC</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSDC</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Delete or shift-Delete key is
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FIC</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSIC</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Insert or shift-Insert key is
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FPPAGE</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FNPAGE</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Page-Up or Page-Down key is
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FPRINT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSPRINT</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Print or shift-Print key is
+pressed.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FA1</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FA3</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FB2</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FC1</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FC3</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the numeric key pad&rsquo;s upper left key
+(7), upper right key (9), central key (5), lower left key
+(1), or lower right key (3) is pressed and num-lock is
+disabled. The key-pad&rsquo;s cursor keys are handled like
+the regular cursor keys.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FEND</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSEND</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the End or shift-End key is pressed.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FHELP</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="12%">
+
+
+<p><b>^FSHELP</b></p></td>
+<td width="2%"></td>
+<td width="75%">
+
+
+<p>Inserted when the Help or shift-Help key is pressed.</p></td></tr>
+</table>
+
+
+<p style="margin-left:11%; margin-top: 1em">&ldquo;^F&rdquo;
+corresponds to CTRL+F in the above list but might be typed
+with a caret due to string building characters in long
+Q-Register names. The names are all derived from key
+definitions of the curses library - not all of them may be
+supported on any particular user interface. A set of useful
+Function Key Macros are provided in the standard library
+<b>fnkeys.tes</b>. It demonstrates how Function Key Macros
+may be used to define alternate Escape keys (so the delay
+issue is not experienced), or do insertion and command-line
+editing using function keys.</p>
+
+<h2>COMMANDLINE EDITING
+<a name="COMMANDLINE EDITING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">After all key
+presses have been translated to characters <b>SciTECO</b>
+interpretes some of them in a special way to perform command
+line editing and a few other actions that cannot depend on
+regular command execution. These special characters are
+called Immediate Editing Commands and are outlined in the
+following subsection. All characters not handled as
+immediate editing commands are self-inserting, i.e. they
+insert themself into the command stream and may be processed
+as regular commands or part of them.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Immediate
+Editing Commands</b> <br>
+In the following table, the Immediate Editing Commands are
+outlined. Some of them are ubiquitous and are not used used
+as regular commands (because it would be hard to type them).
+Some however are context-sensitive and are only available in
+or depend on the current language context (at the end of the
+command line) that is always known to <b>SciTECO</b>.
+Because of this superior parsing and command line editing,
+editing is much less dangerous and much more interactive
+than in classic TECO implementations. Most of these commands
+are control codes, so their control code mnemonics are given
+as well.
+<table class="tbl" style="margin-left:11%" width="89%" rules="all" border="1">
+<tr>
+<td rowspan="1 colspan="1" align="left"><b>Name</b></td>
+<td rowspan="1 colspan="1" align="left"><b>Code</b></td>
+<td rowspan="1 colspan="1" align="left"><b>Mnemonics</b></td>
+<td rowspan="1 colspan="1" align="left"><b>Context</b></td>
+<td rowspan="1 colspan="1" align="left"><b>Description</b></td>
+</tr> <tr> <td rowspan="1 colspan="1"> Rub out </td>
+<td rowspan="1 colspan="1" align="left">8</td>
+<td rowspan="1 colspan="1" align="left">^H, Backspace</td>
+<td rowspan="1 colspan="1"> Everywhere </td>
+<td rowspan="1 colspan="1"> Rubs out the command
+line&rsquo;s last character. </td> </tr> <tr>
+<td rowspan="2 colspan="1"> Rub out word </td>
+<td rowspan="2 colspan="1" align="left">23</td>
+<td rowspan="2 colspan="1" align="left">^W</td>
+<td rowspan="1 colspan="1"> String arguments </td>
+<td rowspan="1 colspan="1"> Rub out last word according to
+Scintilla&rsquo;s definition of a word as set by
+<b>SCI_SETWORDCHARS</b>. </td> </tr> <tr>
+<td rowspan="1 colspan="1"> Miscelleaneous </td>
+<td rowspan="1 colspan="1"> Rub out last command, i.e. rub
+out at least one character until a new command could begin.
+</td> </tr> <tr> <td rowspan="1 colspan="1"> Rub out string
+</td> <td rowspan="1 colspan="1" align="left">21</td>
+<td rowspan="1 colspan="1" align="left">^U</td>
+<td rowspan="1 colspan="1"> String arguments </td>
+<td rowspan="1 colspan="1"> Rub out the entire current
+string argument. </td> </tr> <tr>
+<td rowspan="2 colspan="1"> Auto complete filename </td>
+<td rowspan="1 colspan="1" align="left">20</td>
+<td rowspan="1 colspan="1" align="left">^T</td>
+<td rowspan="1 colspan="1"> String arguments </td>
+<td rowspan="1 colspan="1"> Auto complete filename beginning
+after the last space (or beginning of the string argument).
+Fully completed filenames are terminated with a space. </td>
+</tr> <tr> <td rowspan="1 colspan="1" align="left">9</td>
+<td rowspan="1 colspan="1" align="left">^I, Tab</td>
+<td rowspan="1 colspan="1"> File name arguments </td>
+<td rowspan="1 colspan="1"> Auto complete filename beginning
+at the start of the argument. Fully completed filenames
+terminate the string argument, except if the &ldquo;{&rdquo;
+terminator is used. </td> </tr> <tr>
+<td rowspan="1 colspan="1"> Auto complete symbol </td>
+<td rowspan="1 colspan="1" align="left">9</td>
+<td rowspan="1 colspan="1" align="left">^I, Tab</td>
+<td rowspan="1 colspan="1"> Scintilla symbol arguments </td>
+<td rowspan="1 colspan="1"> In Scintilla Symbol arguments
+(<b>ES</b> commands), complete beginning with the symbol,
+terminating fully completed symbols with a comma. </td>
+</tr> <tr> <td rowspan="1 colspan="1"> Terminate command
+line </td> <td rowspan="1 colspan="1" align="left">27</td>
+<td rowspan="1 colspan="1" align="left">^[, Escape</td>
+<td rowspan="1 colspan="1"> Immediately after regular
+command ^[ </td> <td rowspan="1 colspan="1"> Two escape
+characters (string terminators do <b>not</b> count)
+terminate the command line, freeing all undo-stack related
+resources and beginning a new command line. </td> </tr> <tr>
+<td rowspan="1 colspan="1"> Suspend process </td>
+<td rowspan="1 colspan="1" align="left">26</td>
+<td rowspan="1 colspan="1" align="left">^Z</td>
+<td rowspan="1 colspan="1"> Everywhere </td>
+<td rowspan="1 colspan="1"> Suspends process using
+<b>SIGTSTP</b>. This is only an immediate editing command on
+platforms supporting this signal (usually Unices). The
+process can be suspended from another process as well, for
+instance by pressing CTRL+Z in the console - this will also
+work if <b>SciTECO</b> is busy. Therefore with GUI user
+interfaces (GTK+), this command will only work as an
+immediate editing command in the GUI or as a signal
+dispatched from an associated console or from another
+process. </td> </tr> <tr> <td rowspan="1 colspan="1">
+Interrupt </td>
+<td rowspan="1 colspan="1" align="left">3</td>
+<td rowspan="1 colspan="1" align="left">^C</td>
+<td rowspan="1 colspan="1"> <b>SciTECO</b> is busy </td>
+<td rowspan="1 colspan="1"> <b>Not a real immediate editing
+command.</b> Will interrupt the current operation (character
+processing), yielding a <b>SciTECO</b> error. It depends on
+asynchronous delivery of the <b>SIGINT</b> signal and is
+useful to interrupt infinite loops. Therefore with GUI user
+interfaces, the signal might has to be delivered via the
+attached console or from another process. If <b>SciTECO</b>
+is not busy, <b>^C</b> is self-inserting and might be used
+as a regular command. </td> </tr> </table></p>
+
+<p style="margin-left:11%; margin-top: 1em">The immediate
+editing commands that perform auto-completions, do so in a
+manner similar to Posix shells. Upon first invocation they
+try to fully or partially complete the file name (or token).
+If no completion can be performed, the invocation will
+display a list of file names (or tokens) beginning with the
+token to complete in <b>SciTECO</b>&rsquo;s popup area. Note
+that no additional expansions are performed before
+attempting a completion, so for instance &ldquo;~/foo&rdquo;
+will not complete a file in the user&rsquo;s home directory
+(tilde is not part of the file name but tilde-expansions are
+performed by the shell). <b>SciTECO</b> does however perform
+completions after string building so that
+&ldquo;^EQ{$HOME}/foo&rdquo; could be completed.</p>
+
+<h2>ARITHMETICS AND EXPRESSIONS
+<a name="ARITHMETICS AND EXPRESSIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+abstracts classic TECO&rsquo;s scheme of commands accepting
+at most two prefix arguments and returning at most one value
+for the next command into a much more elaborate scheme where
+commands accept <i>n</i> arguments and return <i>n</i>
+arguments. This is done using an integer value stack. The
+stack is used for passing arguments and for arithmetics.
+<b>SciTECO</b> is thus a stack-based language. Nevertheless
+unary prefix and binary infix operators including operator
+preference are supported. Since the same stack is used for
+arithmetics and command arguments, arithmetics and arbitrary
+code may be freely mixed like in expression-centered
+languages and some classic TECOs. In fact, in <b>SciTECO</b>
+digits are basically stack-operating commands. For the sake
+of macro portability all integers are 64-bit signed integers
+regardless of the host&rsquo;s architecture. The integer
+storage size may be changed at <b>SciTECO</b> build time
+however. In this specific build, integers are 64-bit.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some commands
+expect or return booleans, most often signifying success or
+failure. Booleans are also integers but unlike in ordinary
+(sane) languages where 0 represent false and other values
+represent true, in <b>SciTECO</b> negative values (smaller
+than zero) represent success and non-negative values
+(smaller than or equal zero) represent failure. Therefore
+<b>SciTECO</b> booleans may be negated by performing a
+binary (bit by bit) negation for instance using the
+<b>^_</b> command.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Operators</b>
+<br>
+The following binary operators are supported with descending
+precedence: <i><br>
+base</i> <b>^*</b> <i>power</i></p>
+
+<p style="margin-left:14%;">Raise <i>base</i> to
+<i>power</i>.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>*</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Multiply <i>a</i> by
+<i>b</i>.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>/</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Divide <i>a</i> by <i>b</i>.
+Naturally it is a division without remainder.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>^/</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Remainder of <i>a</i> divided
+by <i>b</i>. It is actually a modulo operation conforming to
+the host C compiler&rsquo;s modulo semantics.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>-</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Subtract <i>b</i> from
+<i>a</i>.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>+</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Add <i>b</i> to <i>a</i>.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>&amp;</b>
+<i>b</i></p>
+
+<p style="margin-left:14%;">Binary AND.</p>
+
+<p style="margin-left:11%;"><i>a</i> <b>#</b> <i>b</i></p>
+
+<p style="margin-left:14%;">Binary OR.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Round brackets
+may be used for grouping expressions to override operator
+precedence. The opening bracket also represents an argument
+barrier, ie. the first command after the opening bracket
+does not see and cannot pop any arguments from the stack.
+This may be useful for mixing commands with arithmetic
+expressions. An expression enclosed in brackets returns all
+of the values that have been pushed onto the stack. Another
+construct that may be used as an argument barrier to
+explicitly separate arguments is the comma
+(&ldquo;,&rdquo;). It is obligatory when trying to push a
+sequence of number constants like in &ldquo;1,2&rdquo; but
+is optional in many contexts where it is mandatory in
+classic TECO, like in &ldquo;QaQbD&rdquo;. I recommend to
+use it as much as possible in code where clarity
+matters.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The only unary
+operator currently supported is &ldquo;<b>-</b>&rdquo;. The
+minus-operator is special and has unique semantics. It sets
+the so called <b>prefix sign</b> which is 1 by default to
+-1. This prefix sign may be evaluated by commands - most
+often it is the default value if the argument stack is empty
+so that expressions like &ldquo;-C&rdquo; are rougly
+equivalent to &ldquo;-1C&rdquo;. However in front of opening
+brackets, like in &ldquo;-(1+2)&rdquo;, it is roughly
+equivalent to &ldquo;-1*(1+2)&rdquo; so that values
+calculated in brackets can be easily negated. In front of
+digits the prefix sign specifies whether the digit is added
+or subtracted from the value on the stack so that in front
+of numbers the result is a negative number.</p>
+
+<h2>BUFFER RING
+<a name="BUFFER RING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+organizes files to edit in the so called buffer ring. The
+ring is a circular list of buffers. A buffer is a named or
+unnamed Scintilla document, and may be thought of as
+<b>SciTECO</b>&rsquo;s second important primary data type.
+There is at most one unnamed buffer in the ring, identified
+by the empty name. Named buffers are buffers with an
+associated file name. The file might or might not already
+exist in the file system. The file name uses the host
+system&rsquo;s path seperator. File names are always tried
+to be normalized to absolute paths to make them independant
+of <b>SciTECO</b>&rsquo;s current working directory. New
+buffers are always added at the end of the buffer ring. The
+Id of a buffer corresponds to its position in the ring (the
+first one has Id 1, the second one Id 2, etc.). Buffers may
+be marked dirty by destructive operations.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is a character-oriented editor, so every character in a
+buffer/document may be addressed by a position integer. The
+first character is addressed by position 0. Every document
+has a current position called dot (after the &ldquo;.&rdquo;
+command that returns it). A document may contain any
+sequence of bytes but positions refer to characters that
+might not correspond to individual bytes depending on the
+document&rsquo;s encoding. Consequently when querying the
+code at a character position or inserting characters by
+code, the code may be an Unicode codepoint instead of
+byte-sized integer.</p>
+
+<p style="margin-left:11%; margin-top: 1em">For more
+details, please refer to this manual&rsquo;s command
+reference.</p>
+
+<h2>COMMAND SYNTAX
+<a name="COMMAND SYNTAX"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>&rsquo;s
+command syntax is quite flexible and diverse but may be
+categorized into some base command types.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>C</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>EF</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>A simple command consists of one or more printable or
+control characters whose case is insignificant. Only <b>at
+the beginning</b> of a command, carets followed by one
+character are equivalent to the corresponding control
+character. Since it does not make any sense whatsoever to
+support a caret-form of non-operational (ignored) control
+character commands (i.e. form feed, carriage return, line
+feed, vertical tab), their caret forms (e.g.
+&ldquo;^J&rdquo;) are reserved for future use as operational
+commands. The command is executed as soon as it has been
+completely specified.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>Q</b><i>q</i></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>A command identifier may be followed by a Q-Register
+specification <i>q</i>. It specifies a Q-Register to be
+accessed by the command (e.g. to query, set, increase).</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>I</b><i>string</i><b>$ <br>
+FS</b><i>string1</i><b>$</b><i>string2</i><b>$</b></p>
+
+<p style="margin-left:22%;">A command identifier (and
+Q-Register specification) may be followed by one or more
+string arguments. String arguments are terminated by Escape
+characters (27) by default, but this may be changed using
+modifiers. All string arguments may contain special string
+building characters for instance to embed other strings.
+String building may be enabled or disabled by default for a
+command. In interactive mode the command is often executed
+as soon as it has been completely specified and updates to
+the string arguments are handled interactively.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Modifiers</b>
+<br>
+A command&rsquo;s behaviour or syntax may be influenced by
+so called modifiers written in front of commands. When
+specifying more than one modifier their order is
+insignificant.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The colon
+(<b>:</b>) modifier usually prevents a command from failing
+and instructs it to return a condition (success/failure)
+boolean instead.</p>
+<pre style="margin-left:11%;">1000:C=</pre>
+
+<p style="margin-left:11%;">For instance if
+&ldquo;1000C&rdquo; would fail, &ldquo;1000:C&rdquo; will
+return 0 instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The at
+(<b>@</b>) modifier allows the string termination character
+to be changed for individual commands. The alternative
+termination character must be specified just before the
+first string argument. For instance:</p>
+<pre style="margin-left:11%;">@FS/foo/bar/</pre>
+
+<p style="margin-left:11%;">Any character may be used as an
+alternative termination character. There is one special
+case, though. If specified as the opening curly brace
+(<b>{</b>), a string argument will continue until the
+closing curly brace (<b>}</b>). Curly braces must be
+balanced and after the closing curly brace the termination
+character is reset to Escape and another one may be chosen.
+This feature is especially useful for embedding TECO code in
+string arguments, as in:</p>
+<pre style="margin-left:11%;">@^Um{
+  @FS{foo}/bar/
+}</pre>
+
+<h2>Q-REGISTERS
+<a name="Q-REGISTERS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+may store data in so called Q-Registers. Each Q-Register
+cell has an integer and string part (can store both at the
+same time). Strings are actually Scintilla documents.
+Therefore Q-Register strings may be edited just like buffers
+(see <b>EQ</b> command).</p>
+
+<p style="margin-left:11%; margin-top: 1em">Q-Register
+cells have case-sensitive names and are stored in Q-Register
+tables. These tables are Red-Black trees internally.
+Therefore the Q-Register namespace may be (ab)used as a
+complex data structure e.g. for records, arrays and maps.
+<b>SciTECO</b> provides a global Q-Register table (for
+global registers) and arbitrarily many local Q-Register
+tables (for local registers). Only one global and local
+Q-Register table may be accessed at a time. Macro
+invocations might create new local Q-Register tables for the
+executed code. <b>SciTECO</b> initializes the Q-Registers
+&ldquo;A&rdquo; to &ldquo;Z&rdquo; and &ldquo;0&rdquo; to
+&ldquo;9&rdquo; in every Q-Register table. Furthermore
+<b>SciTECO</b> defines and initializes the following special
+global registers: <b><br>
+_</b> (underscore)</p>
+
+<p style="margin-left:14%;">Search string and search
+condition register.</p>
+
+<p style="margin-left:11%;"><b>-</b> (minus)</p>
+
+<p style="margin-left:14%;">Replacement string register.
+Its integer part is unused.</p>
+
+<p style="margin-left:11%;"><b>*</b> (asterisk)</p>
+
+<p style="margin-left:14%;">Name and id of current buffer
+in ring.</p>
+
+<p style="margin-left:11%;"><b>$</b> (Escape)</p>
+
+<p style="margin-left:14%;">Command-line replacement
+register. Its integer part is unused.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some commands
+may create and initialize new registers if necessary, while
+it is an error to access undefined registers for some other
+commands. The string part of a register is only ever
+initialized when accessed. This is done opaquely, but allows
+you to use register tables as purely numeric data structures
+without the overhead of empty Scintilla documents.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Q-Register
+Specifications</b> <br>
+Q-Registers may be referred to by commands using Q-Register
+specifications:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><i>c</i></p></td>
+<td width="4%"></td>
+<td width="74%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><b>.</b><i>c</i></p></td>
+<td width="4%"></td>
+<td width="74%">
+
+
+<p>Refers to a one character Q-Register. The one character
+name is upper-cased. If lead by a dot, the name refers to a
+local Q-Register, otherwise to a global one.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><b>#</b><i>cc</i></p></td>
+<td width="4%"></td>
+<td width="74%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><b>.#</b><i>cc</i></p></td>
+<td width="4%"></td>
+<td width="74%">
+
+
+<p>Refers to a two character global or local Q-Register
+whose name is upper-cased.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><b>{</b><i>name</i><b>}</b></p></td>
+<td width="4%"></td>
+<td width="74%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p><b>.{</b><i>name</i><b>}</b></p></td>
+<td width="4%"></td>
+<td width="74%">
+
+
+<p>Refers to a Q-Register with an arbitrary <i>name</i>.
+The name is <b>not</b> upper-cased. String building
+characters may be used so that Q-Register names may be
+calculated. Curly braces can be used in <i>name</i> as long
+as they are balanced. The short single or double character
+specifications refer to registers in the same namespace as
+long specifications. For instance the specifications
+&ldquo;a&rdquo; and &ldquo;A&rdquo; are equivalent to
+&ldquo;{A}&rdquo;.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Push-Down
+List</b> <br>
+Another data structure supported by <b>SciTECO</b> is the
+Q-Register push-down list. Register contents may be pushed
+onto and popped from this list, for instance to save and
+restore global registers modified by a macro. The global
+Q-Register push-down list is handled using the
+<b>[</b><i>q</i> and <b>]</b><i>q</i> commands. For instance
+to search in a macro without overwriting the contents of the
+search register you could write:</p>
+<pre style="margin-left:11%;">[_ Sfoo$ ]_</pre>
+
+<h2>STRING-BUILDING CHARACTERS
+<a name="STRING-BUILDING CHARACTERS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">As alluded to
+earlier <b>SciTECO</b> supports special characters in
+command string arguments and long Q-Register names. These
+are called string-building characters. String-building
+character processing may be enabled or disabled for specific
+commands by default but is always enabled in long Q-Register
+specifications. String building and processing is performed
+in the following stages:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em">1.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">Carets followed by characters
+are translated to control codes, so &ldquo;^a&rdquo; and
+&ldquo;^A&rdquo; are equivalent to CTRL+A (code 1). A double
+caret &ldquo;^^&rdquo; is translated to a single caret. This
+caret-handling is independent of the caret-handling in
+command names.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>2.</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>String building characters are processed, resulting in
+expansions or translations of subsequent characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="3%">
+
+
+<p>3</p></td>
+<td width="3%"></td>
+<td width="72%">
+
+
+<p>Command-specific character processing. Some commands,
+most notably the search and replace commands, might
+interprete special characters and domain specific languages
+after string building. Care has been taken so that the
+string building and command-specific languages do not clash
+(i.e. to minimize necessary escaping).</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">String building
+characters/expressions are always lead by a control
+character and their case is insignificant. In the following
+list of supported expressions, the caret-notation thus
+refers to the corresponding control code:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p style="margin-top: 1em"><b>^Q</b><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^R</b><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Escape character <i>c</i>. The character is not handled
+as a string building character, so for instance
+&ldquo;^Q^Q&rdquo; translates to &ldquo;^Q&rdquo;.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^V^V</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^V</b><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Translates all following characters into lower case.
+When <b>^V</b> is not followed by <b>^V</b>, a single
+character <i>c</i> is lower-cased.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^W^W</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^W</b><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Analogous to <b>^V</b>, but upper-cases characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EQ</b><i>q</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Expands to the string contents of the Q-Register
+specified by <i>q</i>. Currently, long Q-Register names have
+a separate independant level of string building character
+processing, allowing you to build Q-Register names whose
+content is then expanded.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EU</b><i>q</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Expands to the character whose code is stored in the
+numeric part of Q-Register <i>q</i>. For instance if
+register &ldquo;A&rdquo; contains the code 66,
+&ldquo;^EUa&rdquo; expands to the character
+&ldquo;B&rdquo;.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^E</b><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>All remaining <b>^E</b> combinations are passed down
+unmodified. Therefore <b>^E</b> pattern match characters do
+not have to be escaped.</p></td></tr>
+</table>
+
+<h2>PATTERN MATCH CHARACTERS
+<a name="PATTERN MATCH CHARACTERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>&rsquo;s
+search and replace commands allow the use of wildcards for
+pattern matching. These pattern match characters are all led
+by control characters and their case is insignificant, so
+they usually require much less escaping and thus less typing
+than regular expressions. Nevertheless they describe a
+similar class of languages. Pattern match character
+processing is performed after string building by search and
+replace commands.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The following
+pattern match constructs are supported for matching one
+character in different character classes (caret-notations
+refer to the corresponding control characters):</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p style="margin-top: 1em"><b>^S</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EB</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all non-alpha-numeric characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EA</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all alphabetic characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EC</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all symbol constituents. These are currently
+defined as alpha-numeric characters, dot (.) and dollar ($)
+signs.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^ED</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all digits.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EG</b><i>q</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all characters in the string of the Q-Register
+specified by <i>q</i>, i.e. one of the characters in the
+register.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EL</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all line break characters. These are defined as
+carriage return, line-feed, vertial tab and form feed.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^ER</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all alpha-numeric characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EV</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all lower-case alphabetic characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^EW</b></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Matches all upper-case alphabetic characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>c</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>All other (non-magic) characters represent a class that
+contains only the character itself.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">The following
+additional pattern match constructs are supported
+(caret-notations refer to the corresponding control
+characters):</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><b>^X</b></p></td>
+<td width="7%"></td>
+<td width="33%">
+</td>
+<td width="45%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><b>^EX</b></p></td>
+<td width="7%"></td>
+<td width="33%">
+
+
+<p>Matches any character.</p></td>
+<td width="45%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>^N</b><i>class</i></p>
+
+<p style="margin-left:22%;">Matches any character
+<b>not</b> in <i>class</i>. All constructs listed above for
+matching classes may be used.</p>
+
+<p style="margin-left:11%;"><b>^EM</b><i>pattern</i></p>
+
+<p style="margin-left:22%;">Matches many occurrences (at
+least one) of <i>pattern</i>. Any pattern match construct
+and non-magic character may be used.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><b>^ES</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Matches any sequence of whitespace characters (at least
+one). Whitespace characters are defined as line-break
+characters, the space and horizontal tab characters.</p></td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>^E[</b><i>pattern1</i><b>,</b><i>pattern2</i><b>,</b><i>...</i><b>]</b></p>
+
+<p style="margin-left:22%;">Matches one in a list of
+patterns. Any pattern match construct may be used. The
+pattern alternatives must be separated by commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All
+non-pattern-match-characters match themselves. Note however
+that currently, all pattern matching is performed
+<b>case-insensitive</b>.</p>
+
+<h2>FLOW CONTROL
+<a name="FLOW CONTROL"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is a structured imperative language. Commands are executed
+from left to right. The white space characters space, form
+feed, carriage return, line feed and vertical tab are
+non-operational (ignored) commands. All of the standard
+structured (and unstructured) flow control constructs are
+supported: gotos, loops and conditionals. Flow control
+commands have a syntax similar to commands but allowing code
+blocks. They are documented in the following
+subsections.</p>
+
+<p style="margin-left:11%; margin-top: 1em">It is important
+to note that in contrast to classic TECOs and Video TECO,
+<b>SciTECO</b> handles flow control constructs much more
+elaborately. While classic TECOs control flow by linearilly
+searching the program code, paying no attention to string
+boundaries and comments, <b>SciTECO</b> always parses code
+even when not executing so you do not have to care about
+characters relevant for flow control in string arguments and
+the like. <b>SciTECO</b> will never ever jump into string
+arguments! Also <b>SciTECO</b> caches program counters in
+tables and on the expression stack so that flow-control
+statements are generally faster than in classic TECOs.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>GOTOS AND
+LABELS</b> <br>
+The most basic flow control command in <b>SciTECO</b> is the
+Go-to command. Since it is really an ordinary command,
+exceptional only in setting the program counter and
+influencing parsing, it is described in this
+document&rsquo;s command reference. <b>SciTECO</b> may do
+simple unconditional and computed gotos.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Labels are
+symbolic and are defined with the following syntax: <b><br>
+!</b><i>label</i><b>!</b> <br>
+Whereas <i>label</i> is an arbitrary string. String building
+is not performed on <i>label</i>, i.e. it is used verbatim.
+When a label is encountered, it is cached in a
+macro-invocation level specific goto table if it is not in
+there already. Therefore every macro invocation has its own
+label namespace and gotos to a label have constant
+complexity once a label has been parsed. Terminating a macro
+execution (or command line) fails if a label that is jumped
+to has not been defined. Labels also have another important
+role in <b>SciTECO</b> - they are used as comments.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>LOOPS</b>
+<br>
+Gotos may be used for looping, but <b>SciTECO</b> also
+supports a dedicated structured looping construct. Its
+syntax is as follows: <br>
+[<i>n</i>]<b>&lt;</b> <i>code</i> <b>&gt;</b> <br>
+In other words, sharp brackets (less-than and greater-than
+signs) correspond to the loop start and end. The opening
+bracket acts as an argument barrier (i.e. the command
+immediately following does not see any argument) and the
+closing bracket discards all values accumulated on the
+expression stack since the loop&rsquo;s beginning (similar
+to a <b>^[</b> command). The opening bracket takes an
+optional argument <i>n</i>. If <i>n</i> is omitted, -1 is
+implied. The loops behaviour depends on the value of
+<i>n</i>:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>n</i> &gt; 0</p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Execute <i>code</i> exactly <i>n</i> times. You may
+break from the loop earlier though, using the semicolon
+(<b>;</b>) command.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>n</i> = 0</p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Skip loop. <i>code</i> is not executed but
+<b>SciTECO</b> parses until the loop&rsquo;s end before
+continuing execution.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>n</i> &lt; 0</p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Infinite loop. The loop does not terminate automatically
+but you must break from it manually. Consequently, if
+<i>n</i> is omitted the loop will be an infinite one.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">Furthermore
+there are a number of flow control commands that may be used
+in loops like <b>F&lt;</b> and <b>F&gt;</b>. They are
+described in the reference section of this manual.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>CONDITIONALS</b>
+<br>
+Last but not least, <b>SciTECO</b> supports so called
+conditionals. They correspond to structured IF-THEN-ELSE
+statements in other imperative languages. The general syntax
+of conditionals is as follows: <i><br>
+n</i><b>&quot;</b><i>c if</i> [<b>|</b> <i>else</i> ]
+<b>&rsquo;</b> <br>
+Whereas <i>n</i> is a value on the stack to test, <i>c</i>
+is a case-insignificant character identifying a condition to
+check for, <i>if</i> is a code block to execute if the
+condition applies and <i>else</i> is an optional code block
+to execute if the condition does not apply. The first
+command in the <i>if</i> block will not see any arguments on
+the expression stack but values accumulated on the
+expression stack by the <i>if</i> or <i>else</i> blocks are
+not discarded by the terminating single-quote. In other
+words, conditionals may return values. The possible
+conditions are defined in the following list:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><i>n</i><b>&quot;A</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em">Applies if <i>n</i> is the code
+of an alphabetic character.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;C</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is the code of a symbol constituent.
+Like in pattern matching, a symbol constituent is defined as
+an alpha-numeric character, dot, dollar or underscore.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;D</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is the code a digit character (0 to
+9). The current radix is insignificant.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;S</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;T</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is a condition boolean signifying
+success (or truth). Therefore it is equivalent to a check
+for less than zero (negative).</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;F</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;U</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is a condition boolean signifying
+failure (or falsehood). Therefore it is equivalent to a
+check for greater than or equal to zero (non-negative).</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;E</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;=</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> equals zero.</p></td></tr>
+</table>
+
+<p style="margin-left:22%;">To check two values <i>a</i>
+and <i>b</i> for equality you will commonly write:
+<i>a</i><b>-</b><i>b</i><b>&quot;=</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><i>n</i><b>&quot;G</b></p></td>
+<td width="7%"></td>
+<td width="69%">
+</td>
+<td width="9%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;&gt;</b></p></td>
+<td width="7%"></td>
+<td width="69%">
+
+
+<p>Applies if <i>n</i> is greater than zero (positive).</p></td>
+<td width="9%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%;">To check if a value <i>a</i> is
+greater than a value <i>b</i> you will commonly write:
+<i>a</i><b>-</b><i>b</i><b>&quot;&gt;</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><i>n</i><b>&quot;L</b></p></td>
+<td width="7%"></td>
+<td width="64%">
+</td>
+<td width="14%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;&lt;</b></p></td>
+<td width="7%"></td>
+<td width="64%">
+
+
+<p>Applies if <i>n</i> is less than zero (negative).</p></td>
+<td width="14%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%;">To check if a value <i>a</i> is
+less than a value <i>b</i> you will commonly write:
+<i>a</i><b>-</b><i>b</i><b>&quot;&lt;</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><i>n</i><b>&quot;N</b></p></td>
+<td width="7%"></td>
+<td width="38%">
+
+
+<p style="margin-top: 1em">Applies if <i>n</i> is not
+zero.</p> </td>
+<td width="40%">
+</td></tr>
+</table>
+
+<p style="margin-left:22%;">To check two values <i>a</i>
+and <i>b</i> for inequality you will commonly write:
+<i>a</i><b>-</b><i>b</i><b>&quot;N</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p style="margin-top: 1em"><i>n</i><b>&quot;R</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em">Applies if <i>n</i> is the code
+of an alpha-numeric character.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;V</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is the code of a lower-case
+alphabetic character.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>n</i><b>&quot;W</b></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Applies if <i>n</i> is the code of a upper-case
+alphabetic character.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">There are also
+a number of flow-control commands like <b>F&rsquo;</b> and
+<b>F|</b> that may be used in conditionals. They are
+described in the reference section of this manual. Note also
+that it is safe to invoke gotos and breaks from loops in
+conditional blocks.</p>
+
+<h2>COMMAND REFERENCE
+<a name="COMMAND REFERENCE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This section
+documents all of the commands supported by <b>SciTECO</b>.
+The command reference adheres to a few typographic
+conventions:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p style="margin-top: 1em">The first lines in each command
+subsection descibes the command&rsquo;s syntax. Each line
+corresponds to one alternative.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p>[<i>...</i>] denotes an optional value or construct.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p>Alternatives are separated by &ldquo;|&rdquo;.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p><i>Italic</i> (or underlined) words refer to variable
+values or characters.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p><b>Bold</b> characters are of syntactic
+significance.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p>A right arrow (&rarr;) is followed by the
+command&rsquo;s return values (i.e. values pushed onto the
+expression stack).</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="3%"></td>
+<td width="74%">
+
+
+<p><b>$</b> separates string arguments since the default
+string terminator Escape (code 27) is echoed as a dollar
+sign by <b>SciTECO</b>.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">The same
+conventions are used elsewhere in this manual.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Save last
+command line</b> <br>
+*q</p>
+
+<p style="margin-left:11%; margin-top: 1em">Only at the
+very beginning of a command-line, this command may be used
+to save the last command line as a string in Q-Register
+<i>q</i></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Go to
+label</b> <br>
+Olabel$ <br>
+[<i>n</i>] Olabel1[,label2,...]$</p>
+
+<p style="margin-left:11%; margin-top: 1em">Go to
+<i>label</i> The simple go-to command is a special case of
+the computed go-to command. A comma-separated list of labels
+may be specified in the string argument. The label to jump
+to is selected by <i>n</i> (1 is <i>label1</i> , 2 is
+<i>label2</i> , etc.). If <i>n</i> is omitted, the sign
+prefix is implied.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the label
+selected by <i>n</i> is does not exist in the list of
+labels, the command does nothing. Label definitions are
+cached in a table, so that if the label to go to has already
+been defined, the go-to command will jump immediately.
+Otherwise, parsing continues until the <i>label</i> is
+defined. The command will yield an error if a label has not
+been defined when the macro or command-line is terminated.
+In the latter case, the user will not be able to terminate
+the command-line.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Append
+digit</b> <br>
+[<i>n</i>]
+<i>0</i>|<i>1</i>|<i>2</i>|<i>3</i>|<i>4</i>|<i>5</i>|<i>6</i>|<i>7</i>|<i>8</i>|<i>9</i>
+&rarr; n*Radix+ <b>X</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">Integer
+constants in <b>SciTECO</b> may be thought of and are
+technically sequences of single-digit commands. These
+commands take one argument from the stack (0 is implied),
+multiply it with the current radix (2, 8, 10, 16, ...), add
+the digit&rsquo;s value and return the resultant
+integer.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+command-like semantics of digits may be abused in macros,
+for instance to append digits to computed integers. It is
+not an error to append a digit greater than the current
+radix - this may be changed in the future.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Return
+buffer position</b> <br>
+. &rarr; dot</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">&ldquo;.&rdquo;
+pushes onto the stack, the current position (also called
+<i>dot</i> ) of the currently selected buffer or
+Q-Register.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Return
+buffer size <br>
+Z</b> &rarr; size</p>
+
+<p style="margin-left:11%; margin-top: 1em">Pushes onto the
+stack, the size of the currently selected buffer or
+Q-Register. This is value is also the buffer position of the
+document&rsquo;s end.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Return range
+for entire buffer <br>
+H</b> &rarr; 0, <b>Z</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">Pushes onto the
+stack the integer 0 (position of buffer beginning) and the
+current buffer&rsquo;s size. It is thus often equivalent to
+the expression &ldquo;0,Z&rdquo;, or more generally
+&ldquo;(0,Z)&rdquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Insert or
+read ASCII numbers</b> <br>
+n\ <br>
+\ &rarr; n</p>
+
+<p style="margin-left:11%; margin-top: 1em">Backslash pops
+a value from the stack, formats it according to the current
+radix and inserts it in the current buffer or Q-Register at
+dot. If <i>n</i> is omitted (empty stack), it does the
+reverse - it reads from the current buffer position an
+integer in the current radix and pushes it onto the stack.
+Dot is not changed when reading integers.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In other words,
+the command serializes or deserializes integers as ASCII
+characters.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Conditionally
+break from loop</b> <br>
+[<i>bool</i>] ; <br>
+[<i>bool</i>] :;</p>
+
+<p style="margin-left:11%; margin-top: 1em">Breaks from the
+current inner-most loop if <i>bool</i> signifies failure
+(non-negative value). If colon-modified, breaks from the
+loop if <i>bool</i> signifies success (negative value).</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the
+condition code cannot be popped from the stack, the global
+search register&rsquo;s condition integer is implied
+instead. This way, you may break on search success/failures
+without colon-modifying the search command (or at a later
+point).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Edit command
+line</b> <br>
+{ <br>
+}</p>
+
+<p style="margin-left:11%; margin-top: 1em">The opening
+curly bracket is a powerful command to edit command lines
+but has very simple semantics. It copies the current
+commandline into the global command line editing register
+(called Escape, i.e. ASCII 27) and edits this register. The
+curly bracket itself is not copied.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The command
+line may then be edited using any <b>SciTECO</b> command or
+construct. You may switch between the command line editing
+register and other registers or buffers. The user will then
+usually reapply (called update) the current
+command-line.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The closing
+curly bracket will update the current command-line with the
+contents of the global command line editing register. To do
+so it merely rubs-out the current command-line up to the
+first changed character and inserts all characters following
+from the updated command line into the command stream.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Note:</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">Command line editing only works
+on command lines, but not arbitrary macros. It is therefore
+not available in batch mode and will yield an error if
+used.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>Command line editing commands may be safely used from
+macro invocations. Such macros are called command line
+editing macros.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>A command line update from a macro invocation will
+always yield to the outer-most macro level (i.e. the command
+line macro). Code following the update command in the macro
+will thus never be executed.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>As a safe-guard against command line trashing due to
+erroneous changes at the beginning of command lines, a
+backup mechanism is implemented: If the updated command line
+yields an error at any command during the update, the
+original command line will be restored with an algorithm
+similar to command line updating and the update command will
+fail instead. That way it behaves like any other command
+that yields an error: The character resulting in the update
+is rejected by the command line input subsystem.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>In the rare case that an aforementioned command line
+backup fails, the commands following the erroneous character
+will not be inserted again (will be lost).</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Go to
+position in buffer</b> <br>
+[<i>position</i>] <b>J</b> <br>
+[<i>position</i>] : <b>J</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Sets dot to
+<i>position</i> If <i>position</i> is omitted, 0 is implied
+and &ldquo;J&rdquo; will go to the beginning of the
+buffer.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If
+<i>position</i> is outside the range of the buffer, the
+command yields an error. If colon-modified, the command will
+instead return a condition boolean signalling whether the
+position could be changed or not.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Move dot
+&lt;n&gt; characters</b> <br>
+[<i>n</i>] <b>C</b> <br>
+- <b>C</b> <br>
+[<i>n</i>] : <b>C</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Adds <i>n</i>
+to dot. 1 or -1 is implied if <i>n</i> is omitted. Fails if
+<i>n</i> would move dot off-page. The colon modifier results
+in a success-boolean being returned instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Move dot
+&lt;n&gt; characters backwards</b> <br>
+[<i>n</i>] <b>R</b> <br>
+- <b>R</b> <br>
+[<i>n</i>] : <b>R</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Subtracts
+<i>n</i> from dot. It is equivalent to
+&ldquo;-nC&rdquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Move dot
+&lt;n&gt; lines forwards</b> <br>
+[<i>n</i>] <b>L</b> <br>
+- <b>L</b> <br>
+[<i>n</i>] : <b>L</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Move dot to the
+beginning of the line specified relatively to the current
+line. Therefore a value of 0 for <i>n</i> goes to the
+beginning of the current line, 1 will go to the next line,
+-1 to the previous line etc. If <i>n</i> is omitted, 1 or -1
+is implied depending on the sign prefix.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If <i>n</i>
+would move dot off-page, the command yields an error. The
+colon-modifer results in a condition boolean being returned
+instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Move dot
+&lt;n&gt; lines backwards</b> <br>
+[<i>n</i>] <b>B</b> <br>
+- <b>B</b> <br>
+[<i>n</i>] : <b>B</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Move dot to the
+beginning of the line <i>n</i> lines before the current one.
+It is equivalent to &ldquo;-nL&rdquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Move dot by
+words</b> <br>
+[<i>n</i>] <b>W</b> <br>
+- <b>W</b> <br>
+[<i>n</i>] : <b>W</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Move dot
+<i>n</i> words forward.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">If <i>n</i> is positive, dot is
+positioned at the beginning of the word <i>n</i> words after
+the current one.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>If <i>n</i> is negative, dot is positioned at the end of
+the word <i>n</i> words before the current one.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>If <i>n</i> is zero, dot is not moved.</p></td></tr>
+</table>
+
+
+<p style="margin-left:11%; margin-top: 1em">&ldquo;W&rdquo;
+uses Scintilla&rsquo;s definition of a word as configurable
+using the <b>SCI_SETWORDCHARS</b> message.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Otherwise, the
+command&rsquo;s behaviour is analogous to the
+&ldquo;C&rdquo; command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Delete words
+forward</b> <br>
+[<i>n</i>] <b>V</b> <br>
+- <b>V</b> <br>
+[<i>n</i>] : <b>V</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Deletes the
+next <i>n</i> words until the end of the n&rsquo;th word
+after the current one. If <i>n</i> is negative, deletes up
+to end of the n&rsquo;th word before the current one. If
+<i>n</i> is omitted, 1 or -1 is implied depending on the
+sign prefix.</p>
+
+<p style="margin-left:11%; margin-top: 1em">It uses
+Scintilla&rsquo;s definition of a word as configurable using
+the <b>SCI_SETWORDCHARS</b> message.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the words to
+delete extend beyond the range of the buffer, the command
+yields an error. If colon-modified it instead returns a
+condition code.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Delete word
+backwards</b> <br>
+[<i>n</i>] <b>Y</b> <br>
+- <b>Y</b> <br>
+[<i>n</i>] : <b>Y</b> &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Delete <i>n</i>
+words backward. <i>n</i> Y is equivalent to
+&ldquo;-nV&rdquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Show value
+as message</b> <br>
+&lt;n&gt;=</p>
+
+<p style="margin-left:11%; margin-top: 1em">Shows integer
+<i>n</i> as a message in the message line and/or on the
+console. It is currently always formatted as a decimal
+integer and shown with the user-message severity.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Kill
+lines</b> <br>
+[<i>n</i>] <b>K</b> <br>
+- <b>K</b> <br>
+from,to <b>K</b> <br>
+[<i>n</i>] : <b>K</b> &rarr; <i>Success</i>|<i>Failure</i>
+<br>
+from,to: <b>K</b> &rarr; <i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Deletes
+characters up to the beginning of the line <i>n</i> lines
+after or before the current one. If <i>n</i> is 0,
+&ldquo;K&rdquo; will delete up to the beginning of the
+current line. If <i>n</i> is omitted, the sign prefix will
+be implied. So to delete the entire line regardless of the
+position in it, one can use &ldquo;0KK&rdquo;.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the deletion
+is beyond the buffer&rsquo;s range, the command will yield
+an error unless it has been colon-modified so it returns a
+condition code.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If two
+arguments <i>from</i> and <i>to</i> are available, the
+command is synonymous to <i>from</i> , <i>to</i> D.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Delete
+characters</b> <br>
+[<i>n</i>] <b>D</b> <br>
+- <b>D</b> <br>
+from,to <b>D</b> <br>
+[<i>n</i>] : <b>D</b> &rarr; <i>Success</i>|<i>Failure</i>
+<br>
+from,to: <b>D</b> &rarr; <i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">If <i>n</i> is
+positive, the next <i>n</i> characters (up to and character
+.+ <i>n</i> ) are deleted. If <i>n</i> is negative, the
+previous <i>n</i> characters are deleted. If <i>n</i> is
+omitted, the sign prefix will be implied.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If two
+arguments can be popped from the stack, the command will
+delete the characters with absolute position <i>from</i> up
+to <i>to</i> from the current buffer.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the
+character range to delete is beyond the buffer&rsquo;s
+range, the command will yield an error unless it has been
+colon-modified so it returns a condition code instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Get
+character code from buffer</b> <br>
+[<i>n</i>] <b>A</b> &rarr; code <br>
+- <b>A</b> &rarr; code</p>
+
+<p style="margin-left:11%; margin-top: 1em">Returns the
+character <i>code</i> of the character <i>n</i> relative to
+dot from the buffer. This can be an ASCII <i>code</i> or
+Unicode codepoint depending on Scintilla&rsquo;s encoding of
+the current buffer.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">If <i>n</i> is 0, return the
+<i>code</i> of the character pointed to by dot.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>If <i>n</i> is 1, return the <i>code</i> of the
+character immediately after dot.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>If <i>n</i> is -1, return the <i>code</i> of the
+character immediately preceding dot, ecetera.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>If <i>n</i> is omitted, the sign prefix is implied.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">If the position
+of the queried character is off-page, the command will yield
+an error.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Go to loop
+start <br>
+F</b> &lt;</p>
+
+<p style="margin-left:11%; margin-top: 1em">Immediately
+jumps to the current loop&rsquo;s start. Also works from
+inside conditionals.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Go to loop
+end <br>
+F</b> &gt;</p>
+
+<p style="margin-left:11%; margin-top: 1em">Jumps to the
+current loop&rsquo;s end. If the loop has a counter or runs
+idefinitely, the jump is performed immediately. If the loop
+has reached its last iteration, parsing until the loop end
+command has been found is performed.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, if the loop is incomplete and must be exited, you can
+type in the loop&rsquo;s remaining commands without them
+being executed (but they are parsed).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Jump to end
+of conditional <br>
+F</b> &acute;</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Jump to
+else-part of conditional <br>
+F</b> |</p>
+
+<p style="margin-left:11%; margin-top: 1em">Jump to
+else-part of conditional or end of conditional (only if
+invoked from inside the condition&rsquo;s else-part).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set radix to
+8 (octal)</b> <br>
+^ <b>O</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set radix to
+10 (decimal)</b> <br>
+^ <b>D</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set and get
+radix</b> <br>
+radix^ <b>R</b> <br>
+^ <b>R</b> &rarr; radix</p>
+
+<p style="margin-left:11%; margin-top: 1em">Set current
+radix to arbitrary value <i>radix</i> If <i>radix</i> is
+omitted, the command instead returns the current radix.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Insert with
+leading TAB</b> <br>
+[char,...]^ <b>I</b> [<i>text</i>] $</p>
+
+<p style="margin-left:11%; margin-top: 1em">^I (usually
+typed using the Tab key), is equivalent to
+&ldquo;[char,...],9I[text]$&rdquo;. In other words after all
+the chars on the stack have been inserted into the buffer, a
+Tab-character is inserted and then the optional <i>text</i>
+is inserted interactively.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Discard all
+arguments</b> <br>
+^[ <br>
+$</p>
+
+<p style="margin-left:11%; margin-top: 1em">Pops and
+discards all values from the stack that might otherwise be
+used as arguments to following commands. Therefore it stops
+popping on stack boundaries like they are introduced by
+arithmetic brackets or loops.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that ^[ is
+usually typed using the Escape key. CTRL+[ however is
+possible as well and equivalent to Escape in every manner.
+The Caret-[ notation however is processed like any ordinary
+command and only works as the discard-arguments command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Binary
+negation</b> <br>
+n^_ &rarr; ~n</p>
+
+<p style="margin-left:11%; margin-top: 1em">Binary negates
+(complements) <i>n</i> and returns the result. Binary
+complements are often used to negate <b>SciTECO</b>
+booleans.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Get ASCII
+code of character</b> <br>
+^^c &rarr; n</p>
+
+<p style="margin-left:11%; margin-top: 1em">Returns the
+ASCII code of the character <i>c</i> that is part of the
+command. Can be used in place of integer constants for
+improved readability. For instance ^^A will return 65.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that this
+command can be typed CTRL+Caret or Caret-Caret.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Remove
+buffer from ring</b> <br>
+[<i>bool</i>] <b>EF</b> <br>
+- <b>EF</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">Removes buffer
+from buffer ring, effectively closing it. If the buffer is
+dirty (modified), EF will yield an error. <i>bool</i> may be
+a specified to enforce closing dirty buffers. If it is a
+Failure condition boolean (negative), the buffer will be
+closed unconditionally. If <i>bool</i> is absent, the sign
+prefix (1 or -1) will be implied, so &ldquo;-EF&rdquo; will
+always close the buffer.</p>
+
+<p style="margin-left:11%; margin-top: 1em">It is
+noteworthy that EF will be executed immediately in
+interactive mode but can be rubbed out at a later time to
+reopen the file. Closed files are kept in memory until the
+command line is terminated.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set and get
+ED-flags</b> <br>
+flags <b>ED</b> <br>
+[off,]on <b>ED <br>
+ED</b> &rarr; flags</p>
+
+<p style="margin-left:11%; margin-top: 1em">With arguments,
+the command will set the ED flags. <i>flags</i> is a bitmap
+of flags to set. Specifying one argument to set the flags is
+a special case of specifying two arguments that allow to
+control which flags to enable/disable. <i>off</i> is a
+bitmap of flags to disable (set to 0 in ED flags) and
+<i>on</i> is a bitmap of flags that is ORed into the flags
+variable. If <i>off</i> is omitted, the value 0^_ is
+implied. In otherwords, all flags are turned off before
+turning on the <i>on</i> flags. Without any argument ED
+returns the current flags.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Currently, the
+following flags are used by <b>SciTECO</b>:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">32: Enable/Disable executing
+register &ldquo;0&rdquo; hooks</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>64: Enable/Disable function key macros</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">The features
+controlled thus are discribed in other sections of this
+manual.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Exit
+program</b> <br>
+[<i>bool</i>] <b>EX</b> <br>
+- <b>EX</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">Exits
+<b>SciTECO</b>. It is one of the few commands that is not
+executed immediately both in batch and interactive mode. In
+batch mode EX will exit the program if control reaches the
+end of the munged file, preventing interactive mode editing.
+In interactive mode, EX will request an exit that is
+performed on command line termination (i.e. after
+<b>$$</b>).</p>
+
+<p style="margin-left:11%; margin-top: 1em">If any buffer
+is dirty (modified), EX will yield an error. When specifying
+<i>bool</i> as a Failure condition boolean, EX will exit
+unconditionally. If <i>bool</i> is omitted, the sign prefix
+is implied (1 or -1). In other words &ldquo;-EX&rdquo; will
+always succeed.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Send
+Scintilla message</b> <br>
+[lParam[,wParam]]ESmessage[,wParam]$ [<i>lParam</i>] $
+&rarr; result</p>
+
+<p style="margin-left:11%; margin-top: 1em">Send Scintilla
+message with code specified by symbolic name <i>message</i>
+, <i>wParam</i> and <i>lParam wParam</i> may be symbolic
+when specified as part of the first string argument. If not
+it is popped from the stack. <i>lParam</i> may be specified
+as a constant string whose pointer is passed to Scintilla if
+specified as the second string argument. If the second
+string argument is empty, <i>lParam</i> is popped from the
+stack instead. Parameters popped from the stack may be
+omitted, in which case 0 is implied. The message&rsquo;s
+return value is pushed onto the stack.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All messages
+defined by Scintilla (as C macros) can be used by passing
+their name as a string to ES (e.g. ESSCI_LINESONSCREEN...).
+The &ldquo;SCI_&rdquo; prefix may be omitted and message
+symbols are case-insensitive. Only the Scintilla lexer
+symbols (SCLEX_..., SCE_...) may be used symbolically with
+the ES command as <i>wParam</i> , other values must be
+passed as integers on the stack. In interactive mode,
+symbols may be auto-completed by pressing Tab.
+String-building characters are by default interpreted in the
+string arguments.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Warning</b>:
+Almost all Scintilla messages may be dispatched using this
+command. <b>SciTECO</b> does not keep track of the editor
+state changes performed by these commands and cannot undo
+them. You should never use it to change the editor state
+(position changes, deletions, etc.) or otherwise rub out
+will result in an inconsistent editor state. There are
+however exceptions:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em">In the editor profile and batch
+mode in general, the ES command may be used freely.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p>In the ED hook macro (register &ldquo;0&rdquo;), when a
+file is added to the ring, most destructive operations can
+be performed since rubbing out the EB command responsible
+for the hook execution also removes the buffer from the ring
+again.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Insert
+text</b> <br>
+[c1,c2,...] <b>I</b> [<i>text</i>] $</p>
+
+<p style="margin-left:11%; margin-top: 1em">First inserts
+characters for all the values on the argument stack
+(interpreted as codepoints). It does so in the order of the
+arguments, i.e. <i>c1</i> is inserted before <i>c2</i> ,
+ecetera. Secondly, the command inserts <i>text</i> In
+interactive mode, <i>text</i> is inserted interactively.</p>
+
+<p style="margin-left:11%; margin-top: 1em">String building
+characters are by default enabled for the I command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Save
+Q-Register</b> <br>
+[q</p>
+
+<p style="margin-left:11%; margin-top: 1em">Save Q-Register
+<i>q</i> contents on the global Q-Register push-down
+stack.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Restore
+Q-Register</b> <br>
+]q</p>
+
+<p style="margin-left:11%; margin-top: 1em">Restore
+Q-Register <i>q</i> by replacing its contents with the
+contents of the register saved on top of the Q-Register
+push-down stack. The stack entry is popped.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, the original contents of <i>q</i> are not immediately
+reclaimed but are kept in memory to support rubbing out the
+command. Memory is reclaimed on command-line
+termination.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Edit or load
+Q-Register</b> <br>
+EQq$ <br>
+EQq [<i>file</i>] $</p>
+
+<p style="margin-left:11%; margin-top: 1em">When specified
+with an empty <i>file</i> string argument, EQ makes <i>q</i>
+the currently edited Q-Register. Otherwise, when <i>file</i>
+is specified, it is the name of a file to read into
+Q-Register <i>q</i> When loading a file, the currently
+edited buffer/register is not changed and the edit position
+of register <i>q</i> is reset to 0.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Undefined
+Q-Registers will be defined. The command fails if
+<i>file</i> could not be read.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set
+Q-Register string</b> <br>
+^Uq [<i>string</i>] $</p>
+
+<p style="margin-left:11%; margin-top: 1em">Sets
+string-part of Q-Register <i>q</i> to <i>string</i> If
+<i>q</i> is undefined, it will be defined.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">String-building
+is by default disabled for ^U commands.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Insert
+Q-Register string</b> <br>
+Gq</p>
+
+<p style="margin-left:11%; margin-top: 1em">Inserts the
+string of Q-Register <i>q</i> into the buffer at its current
+position. Specifying an undefined <i>q</i> yields an
+error.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Query
+Q-Register integer</b> <br>
+Qq &rarr; n</p>
+
+<p style="margin-left:11%; margin-top: 1em">Gets and
+returns the integer-part of Q-Register <i>q</i> The command
+fails for undefined registers.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Set
+Q-Register integer</b> <br>
+[<i>n</i>] Uq</p>
+
+<p style="margin-left:11%; margin-top: 1em">Sets the
+integer-part of Q-Register <i>q</i> to <i>n</i> If <i>n</i>
+is omitted, the sign prefix is implied.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The register is
+defined if it does not exist.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Increase
+Q-Register integer</b> <br>
+[<i>n</i>] %q &rarr; q+n</p>
+
+<p style="margin-left:11%; margin-top: 1em">Add <i>n</i> to
+the integer part of register <i>q</i> , returning its new
+value. <i>q</i> will be defined if it does not exist.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Execute
+macro</b> <br>
+Mq <br>
+:Mq</p>
+
+<p style="margin-left:11%; margin-top: 1em">Execute macro
+stored in string of Q-Register <i>q</i> The command itself
+does not push or pop and arguments from the stack but the
+macro executed might well do so. The new macro invocation
+level will contain its own go-to label table and local
+Q-Register table. Except when the command is colon-modified
+- in this case, local Q-Registers referenced in the macro
+refer to the parent macro-level&rsquo;s local Q-Register
+table (or whatever level defined one last).</p>
+
+<p style="margin-left:11%; margin-top: 1em">Errors during
+the macro execution will propagate to the M command. In
+other words if a command in the macro fails, the M command
+will fail and this failure propagates until the top-level
+macro (e.g. the command-line macro).</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that the
+string of <i>q</i> will be copied upon macro execution, so
+subsequent changes to Q-Register <i>q</i> from inside the
+macro do not modify the executed code.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Execute
+macro from file</b> <br>
+EMfile$ <br>
+:EMfile$</p>
+
+<p style="margin-left:11%; margin-top: 1em">Read the file
+with name <i>file</i> into memory and execute its contents
+as a macro. It is otherwise similar to the &ldquo;M&rdquo;
+command.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If <i>file</i>
+could not be read, the command yields an error.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Copy into or
+append to Q-Register</b> <br>
+[<i>lines</i>] Xq <br>
+-Xq <br>
+from,toXq <br>
+[<i>lines</i>] :Xq <br>
+-:Xq <br>
+from,to:Xq</p>
+
+<p style="margin-left:11%; margin-top: 1em">Copy the next
+or previous number of <i>lines</i> from the buffer into the
+Q-Register <i>q</i> string. If <i>lines</i> is omitted, the
+sign prefix is implied. If two arguments are specified, the
+characters beginning at position <i>from</i> up to the
+character at position <i>to</i> are copied. The semantics of
+the arguments is analogous to the K command&rsquo;s
+arguments. If the command is colon-modified, the characters
+will be appended to the end of register <i>q</i>
+instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Register
+<i>q</i> will be created if it is undefined.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Open or edit
+file</b> <br>
+[<i>n</i>] <b>EB</b> [<i>file</i>] $ <br>
+nEB$</p>
+
+<p style="margin-left:11%; margin-top: 1em">Opens or edits
+the file with name <i>file</i> If <i>file</i> is not in the
+buffer ring it is opened, added to the ring and set as the
+currently edited buffer. If it already exists in the ring,
+it is merely made the current file. <i>file</i> may be
+omitted in which case the default unnamed buffer is
+created/edited. If an argument is specified as 0, EB will
+additionally display the buffer ring contents in the
+window&rsquo;s popup area. Naturally this only has any
+effect in interactive mode.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><i>file</i> may
+also be a glob-pattern, in which case all files matching the
+pattern are opened/edited.</p>
+
+<p style="margin-left:11%; margin-top: 1em">File names of
+buffers in the ring are normalized by making them absolute.
+Any comparison on file names is performed using guessed or
+actual absolute file paths, so that one file may be referred
+to in many different ways (paths).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><i>file</i>
+does not have to exist on disk. In this case, an empty
+buffer is created and its name is guessed from <i>file</i>
+When the newly created buffer is first saved, the file is
+created on disk and the buffer&rsquo;s name will be updated
+to the absolute path of the file on disk.</p>
+
+<p style="margin-left:11%; margin-top: 1em">File names may
+also be tab-completed and string building characters are
+enabled by default.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If <i>n</i> is
+greater than zero, the string argument must be empty.
+Instead <i>n</i> selects a buffer from the ring to edit. A
+value of 1 denotes the first buffer, 2 the second,
+ecetera.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Save or
+rename current buffer <br>
+EW</b> $ <br>
+EWfile$</p>
+
+<p style="margin-left:11%; margin-top: 1em">Saves the
+current buffer to disk. If the buffer was dirty, it will be
+clean afterwards. If the string argument <i>file</i> is not
+empty, the buffer is saved with the specified file name and
+is renamed in the ring.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, EW is executed immediately and may be rubbed out. In
+order to support that, <b>SciTECO</b> creates so called save
+point files. It does not merely overwrite existing files
+when saving but moves them to save point files instead. Save
+point files are called &ldquo;.teco- <i>filename</i> -
+<i>n</i> &rdquo; where <i>filename</i> is the name of the
+saved file and <i>n</i> is a number that is increased with
+every save operation. Save point files are always created in
+the same directory as the original file to ensure that no
+copying of the file on disk is necessary but only a rename
+of the file. When rubbing out the EW command, <b>SciTECO</b>
+restores the latest save point file by moving (renaming) it
+back to its original path - also not requiring any on-disk
+copying. <b>SciTECO</b> is impossible to crash, but just in
+case it still does it may leave behind these save point
+files which must be manually deleted by the user. Otherwise
+save point files are deleted on command line
+termination.</p>
+
+<p style="margin-left:11%; margin-top: 1em">File names may
+also be tab-completed and string building characters are
+enabled by default.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Search for
+pattern <br>
+S</b> [<i>pattern</i>] $ <br>
+[<i>n</i>] <b>S</b> [<i>pattern</i>] $ <br>
+- <b>S</b> [<i>pattern</i>] $ <br>
+from,toS [<i>pattern</i>] $ <br>
+: <b>S</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+[<i>n</i>] : <b>S</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+-: <b>S</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>S</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Search for
+<i>pattern</i> in the current buffer/Q-Register. Search
+order and range depends on the arguments given. By default
+without any arguments, S will search forward from dot till
+file end. The optional single argument specifies the
+occurrence to search (1 is the first occurrence, 2 the
+second, etc.). Negative values for <i>n</i> perform backward
+searches. If missing, the sign prefix is implied for
+<i>n</i> Therefore &ldquo;-S&rdquo; will search for the
+first occurrence of <i>pattern</i> before dot.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If two
+arguments are specified on the command, search will be
+bounded in the character range <i>from</i> up to <i>to</i> ,
+and only the first occurrence will be searched. <i>from</i>
+might be larger than <i>to</i> in which case a backward
+search is performed in the selected range.</p>
+
+<p style="margin-left:11%; margin-top: 1em">After
+performing the search, the search <i>pattern</i> is saved in
+the global search Q-Register &ldquo;_&rdquo;. A
+success/failure condition boolean is saved in that
+register&rsquo;s integer part. <i>pattern</i> may be omitted
+in which case the pattern of the last search or search and
+replace command will be implied by using the contents of
+register &ldquo;_&rdquo; (this could of course also be
+manually set).</p>
+
+<p style="margin-left:11%; margin-top: 1em">After a
+successful search, the pointer is positioned after the found
+text in the buffer. An unsuccessful search will display an
+error message but not actually yield an error. The message
+displaying is suppressed when executed from loops and
+register &ldquo;_&rdquo; is the implied argument for
+break-commands so that a search-break idiom can be
+implemented as follows:</p>
+<pre style="margin-left:11%;">&lt;Sfoo$; ...&gt;</pre>
+
+<p style="margin-left:11%;">Alternatively, S may be
+colon-modified in which case it returns a condition boolean
+that may be directly evaluated by a conditional or
+break-command.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, searching will be performed immediately (&ldquo;search
+as you type&rdquo;) highlighting matched text on the fly.
+Changing the <i>pattern</i> results in the search being
+reperformed from the beginning.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Search over
+buffer-boundaries</b> <br>
+[<i>n</i>] <b>N</b> [<i>pattern</i>] $ <br>
+- <b>N</b> [<i>pattern</i>] $ <br>
+from,toN [<i>pattern</i>] $ <br>
+[<i>n</i>] : <b>N</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+-: <b>N</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>N</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Search for
+<i>pattern</i> over buffer boundaries. This command is
+similar to the regular search command (S) but will continue
+to search for occurrences of pattern when the end or
+beginning of the current buffer is reached. Occurrences of
+<i>pattern</i> spanning over buffer boundaries will not be
+found. When searching forward N will start in the current
+buffer at dot, continue with the next buffer in the ring
+searching the entire buffer until it reaches the end of the
+buffer ring, continue with the first buffer in the ring
+until reaching the current file again where it searched from
+the beginning of the buffer up to its current dot. Searching
+backwards does the reverse.</p>
+
+<p style="margin-left:11%; margin-top: 1em">N also differs
+from S in the interpretation of two arguments. Using two
+arguments the search will be bounded between the buffer with
+number <i>from</i> , up to the buffer with number <i>to</i>
+When specifying buffer ranges, the entire buffers are
+searched from beginning to end. <i>from</i> may be greater
+than <i>to</i> in which case, searching starts at the end of
+buffer <i>from</i> and continues backwards until the
+beginning of buffer <i>to</i> has been reached. Furthermore
+as with all buffer numbers, the buffer ring is considered a
+circular structure and it is possible to search over buffer
+ring boundaries by specifying buffer numbers greater than
+the number of buffers in the ring.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Delete up to
+occurrence of pattern <br>
+FK</b> [<i>pattern</i>] $ <br>
+[<i>n</i>] <b>FK</b> [<i>pattern</i>] $ <br>
+- <b>FK</b> [<i>pattern</i>] $ <br>
+from,toFK [<i>pattern</i>] $ <br>
+: <b>FK</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+[<i>n</i>] : <b>FK</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+-: <b>FK</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>FK</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">FK searches for
+<i>pattern</i> just like the regular search command (S) but
+when found deletes all text from dot up to but not including
+the found text instance. When searching backwards the
+characters beginning after the occurrence of <i>pattern</i>
+up to dot are deleted.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, deletion is not performed as-you-type but only on
+command termination.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Delete
+occurrence of pattern <br>
+FD</b> [<i>pattern</i>] $ <br>
+[<i>n</i>] <b>FD</b> [<i>pattern</i>] $ <br>
+- <b>FD</b> [<i>pattern</i>] $ <br>
+from,toFD [<i>pattern</i>] $ <br>
+: <b>FD</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+[<i>n</i>] : <b>FD</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+-: <b>FD</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>FD</b> [<i>pattern</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Searches for
+<i>pattern</i> just like the regular search command (S) but
+when found deletes the entire occurrence.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Search and
+replace <br>
+FS</b> [<i>pattern</i>] $ [<i>string</i>] $ <br>
+[<i>n</i>] <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $
+<br>
+- <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $ <br>
+from,toFS [<i>pattern</i>] $ [<i>string</i>] $ <br>
+: <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+[<i>n</i>] : <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $
+&rarr; <i>Success</i>|<i>Failure</i> <br>
+-: <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>FS</b> [<i>pattern</i>] $ [<i>string</i>] $
+&rarr; <i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Search for
+<i>pattern</i> just like the regular search command (S) does
+but replace it with <i>string</i> if found. If <i>string</i>
+is empty, the occurrence will always be deleted so
+&ldquo;FS[pattern]$$&rdquo; is similar to
+&ldquo;FD[pattern]$&rdquo;. The global replace register is
+<b>not</b> touched by the FS command.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In interactive
+mode, the replacement will be performed immediately and
+interactively.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Search and
+replace with default <br>
+FR</b> [<i>pattern</i>] $ [<i>string</i>] $ <br>
+[<i>n</i>] <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $
+<br>
+- <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $ <br>
+from,toFR [<i>pattern</i>] $ [<i>string</i>] $ <br>
+: <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+[<i>n</i>] : <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $
+&rarr; <i>Success</i>|<i>Failure</i> <br>
+-: <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $ &rarr;
+<i>Success</i>|<i>Failure</i> <br>
+from,to: <b>FR</b> [<i>pattern</i>] $ [<i>string</i>] $
+&rarr; <i>Success</i>|<i>Failure</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">The FR command
+is similar to the FS command. It searches for <i>pattern</i>
+just like the regular search command (S) and replaces the
+occurrence with <i>string</i> similar to what FS does. It
+differs from FS in the fact that the replacement string is
+saved in the global replacement register &ldquo;-&rdquo;. If
+<i>string</i> is empty the string in the global replacement
+register is implied instead.</p>
+
+<h2>COMPATIBILITY
+<a name="COMPATIBILITY"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is not compatible to any particular TECO dialect but is
+quite similar to <b>Video TECO</b>. Most Video TECO and many
+Standard TECO programs should be portable with little to no
+changes. This manual mentions differences on several
+occasions.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Program
+invocation and options:</p>
+
+<p style="margin-left:22%;"><b>sciteco</b>(1)</p>
+
+<p style="margin-left:11%;">Scintilla messages and other
+documentation:</p>
+
+
+<p style="margin-left:22%;"><a href="http://scintilla.org/ScintillaDoc.html">Scintilla</a></p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manpage
+and the <b>SciTECO</b> program was written by
+<a href="mailto:robin.haberkorn@googlemail.com">Robin
+Haberkorn</a>.</p>
+<hr>
+</body>
+</html>

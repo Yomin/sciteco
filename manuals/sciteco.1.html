@@ -1,0 +1,291 @@
+<!-- Creator     : groff version 1.21 -->
+<!-- CreationDate: Sat Mar 16 18:56:38 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>sciteco</title>
+
+</head>
+<body>
+
+<h1 align="center">sciteco</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#EXIT STATUS">EXIT STATUS</a><br>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br>
+<a href="#FILES">FILES</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">sciteco
+&minus;&minus; Scintilla-based <b>TE</b>xt <b>E</b>ditor and
+<b>CO</b>rrector</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="11%">
+
+
+<p style="margin-top: 1em"><b>sciteco</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+
+
+
+<p style="margin-top: 1em">[<b>&minus;h|&minus;&minus;help</b>]
+[<b>&minus;e|&minus;&minus;eval&nbsp;</b><i>macro</i>]
+[<b>&minus;m|&minus;&minus;mung&nbsp;</b><i>file</i>]
+[<b>&minus;&minus;</b>] [<i>argument ...</i>]</p></td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+is an interactive <b>TECO</b> dialect, similar to <b>Video
+TECO</b>. It also adds features from classic <b>Standard
+TECO-11</b>, and incorporates many unique new ideas. It is
+geared towards UNIX-like operating systems but also natively
+supports Microsoft Windows NT&trade;.</p>
+
+<p style="margin-left:11%; margin-top: 1em">When executed,
+<b>SciTECO</b> mungs (executes) the TECO macro stored in the
+file specified by the <b>&minus;&minus;mung</b> option. The
+munged file is executed in non-interactive (<i>batch</i>)
+mode, allowing the user to write stand-alone TECO scripts.
+In contrast to ordinary macro execution, if the first two
+characters of the file are &ldquo;#!&rdquo; its first line
+is ignored. Therefore under UNIX-like operating systems,
+TECO macro files may be invoked as scripts by using a
+Hashbang line like</p>
+
+<pre style="margin-left:22%;">#!/usr/local/bin/sciteco -m</pre>
+
+
+<p style="margin-left:11%;">If the munged macro does not
+request program termination using the <i>EX</i> command,
+<b>SciTECO</b> will automatically switch into its graphical
+<i>interactive</i> mode. <b>SciTECO</b> may be built with
+different graphical user interfaces, including Curses and
+GTK+ based ones.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Upon startup
+<b>SciTECO</b>&rsquo;s buffer ring contains only one unnamed
+empty buffer. All command line arguments after the
+<b>SciTECO</b> options are passed as <i>arguments</i> to the
+munged macro by placing each argument on its own line in the
+buffer. In any case the current buffer position (called
+<i>dot</i>) is left at the beginning of the buffer.
+Optionally &ldquo;&minus;&minus;&rdquo; might be used to
+separate <b>SciTECO</b> options and macro arguments.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Batch mode also
+has the following differences compared to interactive
+mode:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="9%"></td>
+<td width="68%">
+
+
+<p>Messages are logged to <i>stdout</i> or <i>stderr</i>
+prefixed with a string signifying message severity.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="9%"></td>
+<td width="68%">
+
+
+<p>Any error will terminate the program.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="9%"></td>
+<td width="68%">
+
+
+<p>Character rubout is disabled. Therefore code runs
+significantly faster than in interactive mode and less care
+needs to be taken regarding memory clutter due to undo token
+accumulation.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">If the
+<b>&minus;&minus;mung</b> option is absent, <b>SciTECO</b>
+will mung <i>~/.teco_ini</i> (if existing) which is called
+the profile. The profile will usually set up various
+Scintilla and <b>SciTECO</b> options, configure syntax
+highlighting, define commonly used macros and open files
+specified as arguments to <b>SciTECO</b>. It will usually
+leave the editor in interactive mode.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-h</b>,
+<b>--help</b></p>
+
+<p style="margin-left:22%;">Display a short help text on
+the console.</p>
+
+<p style="margin-left:11%;"><b>-e</b>, <b>--eval</b>
+<i>macro</i></p>
+
+<p style="margin-left:22%;">Evaluate (execute) <i>macro</i>
+specified as a command-line option. Similar to munging but
+always exits afterwards. If the option is specified, the
+<b>&minus;&minus;mung</b> option has no effect.</p>
+
+<p style="margin-left:11%;"><b>-m</b>, <b>--mung</b>
+<i>file</i></p>
+
+<p style="margin-left:22%;">Mung <i>file</i>. Default is
+<i>~/.teco_ini</i>.</p>
+
+<h2>EXIT STATUS
+<a name="EXIT STATUS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+will return a non-null exit code if an error occurred during
+batch mode processing.</p>
+
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Before
+<b>SciTECO</b> executes any macro, all of the variables in
+the process environment are inserted into the global
+<i>Q-Register</i> table. A dollar sign is prepended before
+each variable name, so that for instance the variable
+&ldquo;HOME&rdquo; can be examined by macros by reading the
+string-content of Q-Register &ldquo;$HOME&rdquo;. The
+following environment variables have a special meaning for
+<b>SciTECO</b>: <b><br>
+SCITECOPATH</b></p>
+
+<p style="margin-left:22%;">Standard library macro path.
+Macros can expect to find standard library macros in this
+directory. It defaults to
+<b>/usr/local/share/sciteco/lib</b> (often the standard
+library path).</p>
+
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>~/.teco_ini</b></p>
+
+<p style="margin-left:22%;">Default profile macro.</p>
+
+
+<p style="margin-left:11%;"><b>/usr/local/share/sciteco/teco.ini</b></p>
+
+<p style="margin-left:22%;">Sample profile macro
+configuring commonly used run-time options and opening files
+specified as arguments.</p>
+
+
+<p style="margin-left:11%;"><b>/usr/local/share/sciteco/lib/...</b></p>
+
+<p style="margin-left:22%;">Standard library macros.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>SciTECO</b>
+does not have any such thing called &ldquo;bug&rdquo;. Any
+conceived misbehaviour must be totally your fault.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Language
+reference:</p>
+
+<p style="margin-left:22%;"><b>sciteco</b>(7)</p>
+
+<p style="margin-left:11%;">Repository:</p>
+
+
+<p style="margin-left:22%;"><a href="https://github.com/rhaberkorn/sciteco"><b>SciTECO</b></a></p>
+
+<p style="margin-left:11%;">Related dialects:</p>
+
+
+<p style="margin-left:22%;"><a href="http://sourceforge.net/projects/videoteco/">Video
+TECO</a>
+(<a href="http://www.copters.com/teco.html">Manual</a>),
+<br>
+
+<a href="h71000.www7.hp.com/doc/73final/documentation/pdf/teco.pdf">DEC
+Standard TECO-11</a></p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manpage
+and the <b>SciTECO</b> program was written by
+<a href="mailto:robin.haberkorn@googlemail.com">Robin
+Haberkorn</a>.</p>
+<hr>
+</body>
+</html>
