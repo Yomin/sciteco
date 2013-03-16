@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>SciTECO by rhaberkorn</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>SciTECO</h1>
+        <h2>Advanced TECO dialect and interactive screen editor based on Scintilla</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/rhaberkorn/sciteco/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/rhaberkorn/sciteco/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/rhaberkorn/sciteco" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>Overview</h1>
+
+<p>SciTECO is an interactive TECO dialect, similar to <a href="http://www.copters.com/teco.html">Video TECO</a>.
+It also adds features from classic TECO-11, as well as unique new ideas.</p>
+
+<p>The basic approach to text editing is both radically different and surprisingly similar to popular
+editors like Vi or EMacs. Instead of using mostly keyboard commands to modify text in a visual
+manner, in SciTECO you edit a program (called macro) using very few keyboard commands (called
+immediate editing commands). This program edits text for the user and is executed immediately,
+as far as possible. For instance, moving the cursor to the right can be done immediatly via the
+"C" command which is a part of the editor language. The language is the editor so to speak.
+When you delete a character from the end of the command line macro (called rubout), the
+side-effects of that character which may be a command or part of a command, are undone.</p>
+
+<p>SciTECO uses the <a href="http://www.scintilla.org/">Scintilla</a> editor component and supports
+GTK+ as well as NCurses frontends (using <a href="http://foicica.com/scinterm/">Scinterm</a>).
+The NCurses frontend also works with <a href="http://pdcurses.sourceforge.net/">PDCurses/XCurses</a>
+and its <a href="http://www.projectpluto.com/win32a.htm">win32a port</a>.
+Both Linux and Windows (MinGW 32/64) are supported.</p>
+
+<h1>Features</h1>
+
+<p>Some of these features are not yet present but expected to be supported in the near future.</p>
+
+<ul>
+<li>All of the basic Video TECO commands supported</li>
+<li>Operator precedence in arithmetic expressions and an argument stack that may be modified
+by the user (commands may have more than two arguments)</li>
+<li>Extended Q-Register namespace (arbitrary strings): can be used to build libraries and
+can be abused as a data structure</li>
+<li>Make use of your keyboard's function keys by assigning them to strings inserted into
+the command stream</li>
+<li>Many TECO-11 features, like that most commands have a colon-modified form, string-building
+characters, exotic match characters</li>
+<li>Interactivity: supports filename completion via immediate editing commands (e.g. <code>&lt;TAB&gt;</code> in
+commands accepting filenames); immediate searching (similar to search-as-you-type);
+context-sensitive immediate editing commands</li>
+<li>Command rubout: SciTECO can even undo file writes (<code>EW</code> command)</li>
+<li>Munging: Macros may be munged, that is executed in batch mode. By default, a profile
+is munged.</li>
+<li>Syntax highlighting, styles, line numbers, etc. thanks to Scintilla</li>
+</ul><h1>Installation</h1>
+
+<p>SciTECO has the following build and runtime dependencies:</p>
+
+<ul>
+<li>Autotools, GNU C, C++ and <a href="http://www.jirka.org/gob.html">Gob2</a>
+</li>
+<li>Groff (only when formatting HTML manuals)</li>
+<li>
+<a href="http://developer.gnome.org/glib/">Glib</a>, as a cross-platform runtime library</li>
+<li>
+<a href="http://www.scintilla.org/">Scintilla</a>, and possibly <a href="http://foicica.com/scinterm/">Scinterm</a>
+(v1.1 or later)</li>
+<li>
+<a href="http://www.gtk.org/">GTK+ 2</a>, <a href="http://www.gnu.org/software/ncurses/">NCurses</a>,
+<a href="http://pdcurses.sourceforge.net/">PDCurses/XCurses</a> or
+<a href="http://www.projectpluto.com/win32a.htm">PDCurses/Win32a</a>.</li>
+<li>Other curses implementations might work as well but are untested.</li>
+</ul><ol>
+<li>Build Scintilla as described in its README. If you want to build the ncurses version,
+install Scinterm from a subdirectory of Scintilla called <code>scinterm</code>
+(also have a look at SciTECO's <code>--with-scinterm</code> configure option).
+
+<ul>
+<li>For TECO-style control code echoing, apply <code>patches/scintilla-teco-control-codes.patch</code>
+from the SciTECO archive/repository. This will hopefully be simplified in the future.</li>
+</ul>
+</li>
+<li>Untar/unzip/check-out SciTECO into a subdirectory of Scintilla.
+Alternatively, have a look at SciTECO's <code>--with-scintilla</code> configure option.</li>
+<li>Build like any other Autoconf-based project. <code>autoreconf</code> (only necessary if building from
+a working copy), followed by <code>./configure</code>, followed by <code>make</code>.
+The interface may be chosen with <code>--with-interface</code> (ncurses is the default).</li>
+<li>Install with <code>make install</code>.</li>
+<li>You are recommended to use the included <code>teco.ini</code> as a starting point for your profile,
+so copy it to <code>~/.teco_ini</code>.</li>
+</ol><h1>Additional Documentation</h1>
+
+<ul>
+<li>There is a manpage <strong>sciteco</strong>(1) describing program invocation and SciTECO's
+batch mode processing.</li>
+<li>There is a manpage <strong>sciteco</strong>(7) describing SciTECO as a language.</li>
+</ul>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
