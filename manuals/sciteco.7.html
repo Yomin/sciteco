@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.21 -->
-<!-- CreationDate: Sat Mar 16 19:06:33 2013 -->
+<!-- CreationDate: Wed Mar 20 19:43:30 2013 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -539,67 +539,69 @@ are control codes, so their control code mnemonics are given
 as well.
 <table class="tbl" style="margin-left:11%" width="89%" rules="all" border="1">
 <tr>
-<td rowspan="1 colspan="1" align="left"><b>Name</b></td>
-<td rowspan="1 colspan="1" align="left"><b>Code</b></td>
-<td rowspan="1 colspan="1" align="left"><b>Mnemonics</b></td>
-<td rowspan="1 colspan="1" align="left"><b>Context</b></td>
-<td rowspan="1 colspan="1" align="left"><b>Description</b></td>
-</tr> <tr> <td rowspan="1 colspan="1"> Rub out </td>
-<td rowspan="1 colspan="1" align="left">8</td>
-<td rowspan="1 colspan="1" align="left">^H, Backspace</td>
-<td rowspan="1 colspan="1"> Everywhere </td>
-<td rowspan="1 colspan="1"> Rubs out the command
+<td rowspan="1" colspan="1" align="left"><b>Name</b></td>
+<td rowspan="1" colspan="1" align="left"><b>Code</b></td>
+<td rowspan="1" colspan="1" align="left"><b>Mnemonics</b></td>
+<td rowspan="1" colspan="1" align="left"><b>Context</b></td>
+<td rowspan="1" colspan="1" align="left"><b>Description</b></td>
+</tr> <tr> <td rowspan="1" colspan="1"> Rub out </td>
+<td rowspan="1" colspan="1" align="left">8</td>
+<td rowspan="1" colspan="1" align="left">^H, Backspace</td>
+<td rowspan="1" colspan="1"> Everywhere </td>
+<td rowspan="1" colspan="1"> Rubs out the command
 line&rsquo;s last character. </td> </tr> <tr>
-<td rowspan="2 colspan="1"> Rub out word </td>
-<td rowspan="2 colspan="1" align="left">23</td>
-<td rowspan="2 colspan="1" align="left">^W</td>
-<td rowspan="1 colspan="1"> String arguments </td>
-<td rowspan="1 colspan="1"> Rub out last word according to
+<td rowspan="2" colspan="1"> Rub out word </td>
+<td rowspan="2" colspan="1" align="left">23</td>
+<td rowspan="2" colspan="1" align="left">^W</td>
+<td rowspan="1" colspan="1"> String arguments </td>
+<td rowspan="1" colspan="1"> Rub out last word according to
 Scintilla&rsquo;s definition of a word as set by
 <b>SCI_SETWORDCHARS</b>. </td> </tr> <tr>
-<td rowspan="1 colspan="1"> Miscelleaneous </td>
-<td rowspan="1 colspan="1"> Rub out last command, i.e. rub
+<td rowspan="1" colspan="1"> Miscelleaneous </td>
+<td rowspan="1" colspan="1"> Rub out last command, i.e. rub
 out at least one character until a new command could begin.
-</td> </tr> <tr> <td rowspan="1 colspan="1"> Rub out string
-</td> <td rowspan="1 colspan="1" align="left">21</td>
-<td rowspan="1 colspan="1" align="left">^U</td>
-<td rowspan="1 colspan="1"> String arguments </td>
-<td rowspan="1 colspan="1"> Rub out the entire current
+</td> </tr> <tr> <td rowspan="1" colspan="1"> Rub out string
+</td> <td rowspan="1" colspan="1" align="left">21</td>
+<td rowspan="1" colspan="1" align="left">^U</td>
+<td rowspan="1" colspan="1"> String arguments </td>
+<td rowspan="1" colspan="1"> Rub out the entire current
 string argument. </td> </tr> <tr>
-<td rowspan="2 colspan="1"> Auto complete filename </td>
-<td rowspan="1 colspan="1" align="left">20</td>
-<td rowspan="1 colspan="1" align="left">^T</td>
-<td rowspan="1 colspan="1"> String arguments </td>
-<td rowspan="1 colspan="1"> Auto complete filename beginning
-after the last space (or beginning of the string argument).
-Fully completed filenames are terminated with a space. </td>
-</tr> <tr> <td rowspan="1 colspan="1" align="left">9</td>
-<td rowspan="1 colspan="1" align="left">^I, Tab</td>
-<td rowspan="1 colspan="1"> File name arguments </td>
-<td rowspan="1 colspan="1"> Auto complete filename beginning
-at the start of the argument. Fully completed filenames
-terminate the string argument, except if the &ldquo;{&rdquo;
-terminator is used. </td> </tr> <tr>
-<td rowspan="1 colspan="1"> Auto complete symbol </td>
-<td rowspan="1 colspan="1" align="left">9</td>
-<td rowspan="1 colspan="1" align="left">^I, Tab</td>
-<td rowspan="1 colspan="1"> Scintilla symbol arguments </td>
-<td rowspan="1 colspan="1"> In Scintilla Symbol arguments
-(<b>ES</b> commands), complete beginning with the symbol,
-terminating fully completed symbols with a comma. </td>
-</tr> <tr> <td rowspan="1 colspan="1"> Terminate command
-line </td> <td rowspan="1 colspan="1" align="left">27</td>
-<td rowspan="1 colspan="1" align="left">^[, Escape</td>
-<td rowspan="1 colspan="1"> Immediately after regular
-command ^[ </td> <td rowspan="1 colspan="1"> Two escape
+<td rowspan="2" colspan="1"> Auto complete filename </td>
+<td rowspan="1" colspan="1" align="left">20</td>
+<td rowspan="1" colspan="1" align="left">^T</td>
+<td rowspan="1" colspan="1"> String arguments </td>
+<td rowspan="1" colspan="1"> Auto complete filename
+beginning after the last space (or beginning of the string
+argument). Fully completed filenames are terminated with a
+space. </td> </tr> <tr>
+<td rowspan="1" colspan="1" align="left">9</td>
+<td rowspan="1" colspan="1" align="left">^I, Tab</td>
+<td rowspan="1" colspan="1"> File name arguments </td>
+<td rowspan="1" colspan="1"> Auto complete filename
+beginning at the start of the argument. Fully completed
+filenames terminate the string argument, except if the
+&ldquo;{&rdquo; terminator is used. </td> </tr> <tr>
+<td rowspan="1" colspan="1"> Auto complete symbol </td>
+<td rowspan="1" colspan="1" align="left">9</td>
+<td rowspan="1" colspan="1" align="left">^I, Tab</td>
+<td rowspan="1" colspan="1"> Scintilla symbol arguments
+</td> <td rowspan="1" colspan="1"> In Scintilla Symbol
+arguments (<b>ES</b> commands), complete beginning with the
+symbol, terminating fully completed symbols with a comma.
+</td> </tr> <tr> <td rowspan="1" colspan="1"> Terminate
+command line </td>
+<td rowspan="1" colspan="1" align="left">27</td>
+<td rowspan="1" colspan="1" align="left">^[, Escape</td>
+<td rowspan="1" colspan="1"> Immediately after regular
+command ^[ </td> <td rowspan="1" colspan="1"> Two escape
 characters (string terminators do <b>not</b> count)
 terminate the command line, freeing all undo-stack related
 resources and beginning a new command line. </td> </tr> <tr>
-<td rowspan="1 colspan="1"> Suspend process </td>
-<td rowspan="1 colspan="1" align="left">26</td>
-<td rowspan="1 colspan="1" align="left">^Z</td>
-<td rowspan="1 colspan="1"> Everywhere </td>
-<td rowspan="1 colspan="1"> Suspends process using
+<td rowspan="1" colspan="1"> Suspend process </td>
+<td rowspan="1" colspan="1" align="left">26</td>
+<td rowspan="1" colspan="1" align="left">^Z</td>
+<td rowspan="1" colspan="1"> Everywhere </td>
+<td rowspan="1" colspan="1"> Suspends process using
 <b>SIGTSTP</b>. This is only an immediate editing command on
 platforms supporting this signal (usually Unices). The
 process can be suspended from another process as well, for
@@ -608,12 +610,12 @@ work if <b>SciTECO</b> is busy. Therefore with GUI user
 interfaces (GTK+), this command will only work as an
 immediate editing command in the GUI or as a signal
 dispatched from an associated console or from another
-process. </td> </tr> <tr> <td rowspan="1 colspan="1">
+process. </td> </tr> <tr> <td rowspan="1" colspan="1">
 Interrupt </td>
-<td rowspan="1 colspan="1" align="left">3</td>
-<td rowspan="1 colspan="1" align="left">^C</td>
-<td rowspan="1 colspan="1"> <b>SciTECO</b> is busy </td>
-<td rowspan="1 colspan="1"> <b>Not a real immediate editing
+<td rowspan="1" colspan="1" align="left">3</td>
+<td rowspan="1" colspan="1" align="left">^C</td>
+<td rowspan="1" colspan="1"> <b>SciTECO</b> is busy </td>
+<td rowspan="1" colspan="1"> <b>Not a real immediate editing
 command.</b> Will interrupt the current operation (character
 processing), yielding a <b>SciTECO</b> error. It depends on
 asynchronous delivery of the <b>SIGINT</b> signal and is
@@ -788,6 +790,89 @@ byte-sized integer.</p>
 details, please refer to this manual&rsquo;s command
 reference.</p>
 
+<p style="margin-left:11%; margin-top: 1em"><b>Buffer
+Editing Hooks</b> <br>
+When opening or editing a file with the <b>EB</b> command or
+when closing a file with the <b>EF</b> command, you often
+want to configure the editor for a particular language. For
+instance, when opening C++ files you might want to enable
+C++ lexing and syntax highlighting automatically.
+<b>SciTECO</b> thus provides user-configurable hooks into
+buffer editing operations. Hooks are by default disabled. To
+enable them, set bit 5 in the <b>ED</b> flags:</p>
+<pre style="margin-left:11%;">0,32ED</pre>
+
+<p style="margin-left:11%;"><b>SciTECO</b> will now execute
+the macro in Q-Register &ldquo;0&rdquo; (zero) whenever a
+relevant operation is performed. The macro will be passed an
+argument that specifies the type of operation that has just
+been performed or is just about to be performed. Possible
+values are defined consecutively so the macro can branch to
+the operation using a computed goto. The different values
+are defined as follows:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>1</b></p></td>
+<td width="10%"></td>
+<td width="78%">
+
+
+<p>A file has been <b>added</b> to the buffer ring. It may
+or may not already exist in the file system. Scintilla
+lexing should be configured in this hook - it only has to be
+done once.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>2</b></p></td>
+<td width="10%"></td>
+<td width="78%">
+
+
+<p>A buffer has been <b>edited</b> (made the current file).
+This hook is also executed after a file has been added to
+the buffer ring. In this hook you may define
+language-specific auxiliary macros, for instance.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>3</b></p></td>
+<td width="10%"></td>
+<td width="78%">
+
+
+<p>A buffer is about to be <b>closed</b> (removed from the
+buffer ring).</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p><b>4</b></p></td>
+<td width="10%"></td>
+<td width="78%">
+
+
+<p><b>SciTECO</b> is about to <b>exit</b>.</p></td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">The
+side-effects of the hook executions are reversed when
+rubbing out the command that resulted in its execution. The
+<b>SciTECO</b> standard library contains a framework for
+configuring Scintilla lexing and other useful hooks (see
+<b>lexer.tes</b>).</p>
+
 <h2>COMMAND SYNTAX
 <a name="COMMAND SYNTAX"></a>
 </h2>
@@ -805,7 +890,7 @@ categorized into some base command types.</p>
 <td width="3%">
 
 
-<p><b>C</b></p></td>
+<p style="margin-top: 1em"><b>C</b></p></td>
 <td width="8%"></td>
 <td width="78%">
 </td></tr>
@@ -1208,6 +1293,20 @@ numeric part of Q-Register <i>q</i>. For instance if
 register &ldquo;A&rdquo; contains the code 66,
 &ldquo;^EUa&rdquo; expands to the character
 &ldquo;B&rdquo;.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>^E\</b><i>q</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>Expands to the formatted number stored in the numeric
+part of Q-Register <i>q</i>. The number is formatted
+according to the current radix and exactly the same as the
+backslash (<b>\</b>) command would format it.</p></td></tr>
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="6%">
